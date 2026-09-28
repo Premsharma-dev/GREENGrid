@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: greengrid-mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: greengrid_db
+      MYSQL_USER: greengrid_user
+      MYSQL_PASSWORD: greengrid_password
+      MYSQL_ROOT_PASSWORD: root_secure_password_2026
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 5
+
+  web:
+    build: .
+    container_name: greengrid-django
+    restart: always
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py seed_data &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_NAME=greengrid_db
+      - DB_USER=greengrid_user
+      - DB_PASSWORD=greengrid_password
+      - DB_HOST=db
+      - DB_PORT=3306
+      - SECRET_KEY=django-insecure-greengrid-docker-key-2026
+      - DEBUG=True
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  mysql_data:

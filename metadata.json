@@ -1,0 +1,6 @@
+{
+  "name": "GREENGrid — Smart Energy Management System",
+  "description": "Enterprise Energy Management Information System (EMIS) to monitor, analyze, and optimize electricity consumption, tariffs, renewable energy, and billing across facilities.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
